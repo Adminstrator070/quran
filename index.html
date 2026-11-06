@@ -1,0 +1,30 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#d3e7de"><meta name="description" content="مشكاة: تطبيق قرآني متكامل">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<title>مشكاة</title>
+<script>
+(function(){var shown=false;
+function show(msg){if(shown||window.__ok)return;shown=true;var sp=document.getElementById('splash');if(sp)sp.style.display='none';
+ var d=document.createElement('div');d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;background:#0c1512;color:#e9f0ec;padding:24px;overflow:auto;font:15px/1.8 sans-serif;direction:rtl';
+ d.innerHTML='<h2 style="margin:0 0 8px;color:#e0b64a">تعذّر تشغيل مشكاة</h2><p>حدث خطأ أثناء فتح التطبيق. جرّب إعادة المحاولة، وإن تكرّر أرسل التفاصيل التالية للمطوّر.</p><pre id="dg" style="direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-all;background:#15231e;padding:12px;border-radius:12px;font-size:12px"></pre><p><button id="d1" style="padding:12px 20px;border:0;border-radius:12px;background:#3fb184;color:#06150f;font-size:16px">إعادة المحاولة</button></p><p><button id="d2" style="padding:12px 20px;border:1px solid #3fb184;border-radius:12px;background:none;color:#3fb184;font-size:16px">مسح بيانات التطبيق وإعادة المحاولة</button></p>';
+ (document.body||document.documentElement).appendChild(d);
+ d.querySelector('#dg').textContent=msg+'\n\n'+navigator.userAgent;
+ d.querySelector('#d1').onclick=function(){location.reload()};
+ d.querySelector('#d2').onclick=function(){try{localStorage.clear()}catch(e){}try{caches.keys().then(function(k){return Promise.all(k.map(function(x){return caches.delete(x)}))}).then(function(){location.reload()},function(){location.reload()})}catch(e){location.reload()}}}
+window.addEventListener('error',function(e){var m=(e.message||'error')+(e.filename?' @ '+String(e.filename).split('/').pop()+':'+e.lineno:'');
+ if(e.target&&e.target.tagName==='SCRIPT'){show('script failed to load: '+(e.target.src||''))}else window.__err=window.__err||m},true);
+window.addEventListener('unhandledrejection',function(e){window.__err=window.__err||String(e.reason&&e.reason.stack||e.reason)});
+setTimeout(function(){if(!window.__ok)show(window.__err||'startup timeout')},8000);
+})();
+</script>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/style.css"></head><body>
+<header id="top"><button class="iconbtn" id="menu" aria-label="رجوع"></button><h1 id="ttl">مشكاة</h1>
+<div class="acts"><button class="iconbtn" id="srch" aria-label="بحث"></button><button class="avatar" id="av" aria-label="حسابي">?</button></div></header>
+<div id="offline" hidden>أنت غير متصل بالإنترنت. المحتوى المحمّل يعمل بدون اتصال.</div>
+<main id="view"></main><div id="mini" hidden></div><nav id="nav"></nav>
+<div id="auth" hidden></div><div id="sheetroot"></div><div id="toast" hidden></div>
+<div id="splash"><div class="sp-mark"><svg width="84" height="84" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 54V28a16 16 0 0132 0v26z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M24 54V31a8 8 0 0116 0v23" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/><path d="M32 31c-3.5 4-3.5 8 0 10 3.5-2 3.5-6 0-10z" fill="#e3b34b"/><path d="M11 57h42" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><div class="sp-name">مشكاة</div><small>Mishkat</small></div>
+<script type="module" src="js/app.js"></script></body></html>

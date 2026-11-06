@@ -1,0 +1,64 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - name: Fetch offline content (fonts, adhkar)
+        run: |
+          python3 tools/fetch_fonts.py || echo "fonts fetch failed"
+          python3 tools/fetch_adhkar.py || echo "adhkar fetch failed"
+      - run: npm install
+      - name: Bundle the web app
+        run: |
+          mkdir www
+          cp -r manifest.json css icon-192.png icon-512.png www/
+          if [ -d fonts ]; then cp -r fonts www/; fi
+          if [ -d data ]; then cp -r data www/; fi
+          if npx esbuild js/app.js --bundle --minify --target=es2017 --format=iife --outfile=www/app.js; then
+            sed 's#<script type="module" src="js/app.js"></script>#<script src="app.js"></script>#' index.html > www/index.html
+          else
+            echo "bundling failed, falling back to ES modules"
+            cp -r js www/js
+            cp index.html www/index.html
+          fi
+      - run: npx cap add android
+      - name: Permissions and icons
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          sed -i 's#</manifest>#    <uses-permission android:name="android.permission.RECORD_AUDIO" />\n    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <queries><intent><action android:name="android.speech.RecognitionService" /></intent></queries>\n</manifest>#' $M
+          R=android/app/src/main/res
+          rm -rf $R/mipmap-anydpi-v26
+          for d in $R/mipmap-*; do cp icon-192.png $d/ic_launcher.png; cp icon-192.png $d/ic_launcher_round.png; done
+      - run: npx cap sync android
+      - name: Build debug APK
+        run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mishkat-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Signed release APK (only if keystore secrets are set)
+        env:
+          KS_B64: ${{ secrets.KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -z "$KS_B64" ]; then echo "No keystore secrets, skipping release build"; exit 0; fi
+          cd android && ./gradlew assembleRelease
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          echo "$KS_B64" | base64 -d > ../ks.jks
+          $BT/zipalign -p 4 app/build/outputs/apk/release/app-release-unsigned.apk ../aligned.apk
+          $BT/apksigner sign --ks ../ks.jks --ks-pass pass:$KS_PASS --ks-key-alias $KS_ALIAS --key-pass pass:$KS_PASS --out ../mishkat-release.apk ../aligned.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mishkat-release-apk
+          path: mishkat-release.apk
+          if-no-files-found: ignore

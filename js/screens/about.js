@@ -1,0 +1,10 @@
+import {APP} from '../config.js';import {MARK} from '../ui.js';
+const D=(t,b,o)=>`<details class="card" ${o?'open':''}><summary>${t}</summary><div style="line-height:1.9;margin-top:8px;font-size:14px">${b}</div></details>`;
+export default async function(el){
+ el.innerHTML=`<div class="hero tc"><div style="display:grid;justify-items:center;color:#f4efe0">${MARK(64)}</div><h2 style="margin:6px 0 0">${APP.name}</h2><div class="sub">${APP.en} • الإصدار ${APP.version}</div><p style="margin-top:6px">${APP.tagline}</p></div>
+ ${D('عن التطبيق','مشكاة تطبيق قرآني متكامل: المصحف بتلوين التجويد، تلاوات بأكثر من قارئ ورواية، التفسير، التحفيظ بالمصحف المعلّم، التلاوة والتصحيح، مواقيت الصلاة والقبلة، الأذكار، وقسم رمضان، مع التحميل للاستخدام بدون إنترنت.',1)}
+ ${D('سياسة الخصوصية','• بياناتك (الحسابات، الإعدادات، العلامات، الملاحظات، تقدّم الحفظ) تُحفظ على جهازك فقط ولا تُرسل إلى خوادمنا.<br>• لا إعلانات ولا أدوات تتبّع.<br>• يتصل التطبيق بخدمات خارجية لجلب النص والتفسير والصوت والمواقيت (alquran.cloud وmp3quran.net وaladhan.com وGoogle Fonts). عند طلب المواقيت يُرسل موقعك التقريبي أو اسم مدينتك إلى aladhan.com.<br>• الميكروفون لا يُستخدم إلا عند ضغطك على زر التلاوة أو التسجيل. التعرّف على الكلام تعالجه خدمة التعرّف في جهازك أو Google وقد يُرسل الصوت إلى خوادمها. التسجيل الصوتي يبقى مؤقتًا في الذاكرة ولا يُحفظ.<br>• لحذف بياناتك استخدم «حذف بيانات الحساب» من شاشة حسابي.')}
+ ${D('الشروط والأحكام','• المحتوى الديني (التفسير والأذكار) للاسترشاد، ويُرجع لأهل العلم عند الحاجة.<br>• مواقيت الصلاة واتجاه القبلة محسوبان وقد يختلفان عن جهتك المحلية، فتحقّق منهما.<br>• ميزة التصحيح تقريبية على مستوى الكلمات، ولا تغني عن المعلّم أو المقرئ ولا تقيّم أحكام التجويد.<br>• التطبيق يُقدَّم كما هو دون ضمانات.')}
+ ${D('المصادر','النص والتفاسير والترجمة: alquran.cloud • التلاوات: mp3quran.net • المواقيت: aladhan.com • الخطوط: Amiri Quran وTajawal (Google Fonts).')}
+ ${APP.email?`<a class="card row" href="mailto:${APP.email}"><b>${APP.email}</b></a>`:''}<p class="sub tc">© ${new Date().getFullYear()} ${APP.company}</p>`;
+}
